@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaUserRepository } from './prismaUser.repository';
+import { UserAlreadyExistsError } from './errors/userAlreadyExists';
 
 describe('UserService', () => {
   let service: UserService;
@@ -50,6 +51,15 @@ describe('UserService', () => {
 
       expect(userRepositorySpy).toHaveBeenCalledWith(createUserInput.email);
       expect(userRepositorySpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw UserAlreadyExsistsError if user already exists', async () => {
+      // don't need to return user object, true it's enough.
+      jest.spyOn(userRepositoryMock, 'findUnique').mockReturnValue(true);
+
+      const promise = service.create(createUserInput);
+
+      await expect(promise).rejects.toThrow(new UserAlreadyExistsError());
     });
   });
 });
