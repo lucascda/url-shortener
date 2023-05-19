@@ -26,35 +26,30 @@ describe('UserService', () => {
   });
 
   describe('.create', () => {
-    it('should call itself with correct params', async () => {
-      const createUserInput = {
-        name: 'any_name',
-        email: 'any_mail@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      };
-      const createSpy = jest.spyOn(service, 'create');
-
-      await service.create(createUserInput);
-
-      expect(createSpy).toHaveBeenCalledWith(createUserInput);
-    });
-  });
-
-  it('should call UserRepository .findUnique with correct values', async () => {
     const createUserInput = {
       name: 'any_name',
       email: 'any_mail@mail.com',
       password: 'any_password',
       passwordConfirmation: 'any_password',
     };
-    // resets mock info so .toHaveBeenCalled won't be 2, wich is wrong.
-    userRepositoryMock.findUnique.mockClear();
-    const userRepositorySpy = jest.spyOn(userRepositoryMock, 'findUnique');
 
-    await service.create(createUserInput);
+    it('should call itself with correct params', async () => {
+      const createSpy = jest.spyOn(service, 'create');
 
-    expect(userRepositorySpy).toHaveBeenCalledWith(createUserInput.email);
-    expect(userRepositorySpy).toHaveBeenCalledTimes(1);
+      await service.create(createUserInput);
+
+      expect(createSpy).toHaveBeenCalledWith(createUserInput);
+    });
+
+    it('should call UserRepository .findUnique with correct values', async () => {
+      // resets mock info so .toHaveBeenCalled won't be 2, wich is wrong.
+      userRepositoryMock.findUnique.mockClear();
+      const userRepositorySpy = jest.spyOn(userRepositoryMock, 'findUnique');
+
+      await service.create(createUserInput);
+
+      expect(userRepositorySpy).toHaveBeenCalledWith(createUserInput.email);
+      expect(userRepositorySpy).toHaveBeenCalledTimes(1);
+    });
   });
 });
