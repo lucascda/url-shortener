@@ -17,6 +17,12 @@ export class UserService {
       throw new UserAlreadyExistsError();
     }
 
-    await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const data = {
+      name: createUserDto.name,
+      email: createUserDto.email,
+      password: hashedPassword,
+    };
+    await this.repository.create(data);
   }
 }

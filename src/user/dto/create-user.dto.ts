@@ -4,3 +4,9 @@ export class CreateUserDto {
   password: string;
   passwordConfirmation: string;
 }
+
+export class CreateUserDataDto {
+  name: string;
+  email: string;
+  password: string;
+}

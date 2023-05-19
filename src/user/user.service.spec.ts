@@ -4,6 +4,14 @@ import { PrismaUserRepository } from './prismaUser.repository';
 import { UserAlreadyExistsError } from './errors/userAlreadyExists';
 import * as bcrypt from 'bcrypt';
 
+jest.mock('bcrypt', () => ({
+  async hash(): Promise<string> {
+    return await new Promise((resolve) => {
+      resolve('hashed_password');
+    });
+  },
+}));
+
 describe('UserService', () => {
   let service: UserService;
 
@@ -11,15 +19,6 @@ describe('UserService', () => {
     create: jest.fn(),
     findUnique: jest.fn(),
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const bcryptMock = jest.mock('bcrypt', () => ({
-    async hash(): Promise<string> {
-      return await new Promise((resolve) => {
-        resolve('hashed_password');
-      });
-    },
-  }));
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -79,6 +78,20 @@ describe('UserService', () => {
       await service.create(createUserInput);
 
       expect(bcryptSpy).toHaveBeenCalledWith(createUserInput.password, 10);
+    });
+
+    it('should call UserRepository .create with correct values', async () => {
+      const userRepositorySpy = jest.spyOn(userRepositoryMock, 'create');
+
+      userRepositoryMock.create.mockClear();
+      await service.create(createUserInput);
+
+      expect(userRepositorySpy).toHaveBeenCalledTimes(1);
+      expect(userRepositorySpy).toHaveBeenCalledWith({
+        name: 'any_name',
+        email: 'any_mail@mail.com',
+        password: 'hashed_password',
+      });
     });
   });
 });
