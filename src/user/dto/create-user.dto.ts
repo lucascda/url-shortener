@@ -5,6 +5,11 @@ export class CreateUserDto {
   passwordConfirmation: string;
 }
 
+export class CreateUserOutputDto {
+  id: number;
+  name: string;
+  email: string;
+}
 export class CreateUserDataDto {
   name: string;
   email: string;

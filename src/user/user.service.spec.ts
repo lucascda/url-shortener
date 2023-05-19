@@ -16,7 +16,11 @@ describe('UserService', () => {
   let service: UserService;
 
   const userRepositoryMock = {
-    create: jest.fn(),
+    create: jest.fn(() => ({
+      id: 1,
+      name: 'any_name',
+      email: 'any_mail@mail.com',
+    })),
     findUnique: jest.fn(),
   };
 
@@ -91,6 +95,16 @@ describe('UserService', () => {
         name: 'any_name',
         email: 'any_mail@mail.com',
         password: 'hashed_password',
+      });
+    });
+
+    it('should return correct response if user is created', async () => {
+      const response = await service.create(createUserInput);
+
+      expect(response).toEqual({
+        id: 1,
+        name: createUserInput.name,
+        email: createUserInput.email,
       });
     });
   });
