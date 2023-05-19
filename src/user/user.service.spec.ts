@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaUserRepository } from './prismaUser.repository';
 import { UserAlreadyExistsError } from './errors/userAlreadyExists';
+import * as bcrypt from 'bcrypt';
 
 describe('UserService', () => {
   let service: UserService;
@@ -10,6 +11,15 @@ describe('UserService', () => {
     create: jest.fn(),
     findUnique: jest.fn(),
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const bcryptMock = jest.mock('bcrypt', () => ({
+    async hash(): Promise<string> {
+      return await new Promise((resolve) => {
+        resolve('hashed_password');
+      });
+    },
+  }));
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -60,6 +70,15 @@ describe('UserService', () => {
       const promise = service.create(createUserInput);
 
       await expect(promise).rejects.toThrow(new UserAlreadyExistsError());
+    });
+
+    it('should call bcrypt with correct values', async () => {
+      const bcryptSpy = jest.spyOn(bcrypt, 'hash');
+      jest.spyOn(userRepositoryMock, 'findUnique').mockResolvedValue(null);
+
+      await service.create(createUserInput);
+
+      expect(bcryptSpy).toHaveBeenCalledWith(createUserInput.password, 10);
     });
   });
 });
