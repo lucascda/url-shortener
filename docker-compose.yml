@@ -1,0 +1,23 @@
+version: '3'
+services:
+  dev-db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=url-shortener
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=example
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 5430:5432
+
+  test-db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=url-shortener
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=example
+    ports:
+      - 5431:5432
