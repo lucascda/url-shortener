@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PrismaUserRepository } from './prismaUser.repository';
 
 @Injectable()
 export class UserService {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  constructor(private readonly repository: PrismaUserRepository) {}
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const userAlreadyExists = this.repository.findUnique(createUserDto.email);
   }
 }
