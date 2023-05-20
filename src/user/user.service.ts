@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto, CreateUserOutputDto } from './dto/create-user.dto';
+import { CreateUserInputDto, CreateUserOutputDto } from './dto/create-user.dto';
 import { PrismaUserRepository } from './prismaUser.repository';
 import { UserAlreadyExistsError } from './errors/userAlreadyExists';
 import * as bcrypt from 'bcrypt';
@@ -7,7 +7,9 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(private readonly repository: PrismaUserRepository) {}
-  async create(createUserDto: CreateUserDto): Promise<CreateUserOutputDto> {
+  async create(
+    createUserDto: CreateUserInputDto,
+  ): Promise<CreateUserOutputDto> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userAlreadyExists = await this.repository.findUnique(
       createUserDto.email,
