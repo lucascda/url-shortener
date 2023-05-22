@@ -16,4 +16,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   async cleanDatabase() {
     await this.user.deleteMany();
   }
+
+  async resetAutoIncrement() {
+    await this.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART`;
+  }
 }

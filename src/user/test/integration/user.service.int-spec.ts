@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserInputDto } from 'src/user/dto/create-user.dto';
+import { UserAlreadyExistsError } from 'src/user/errors/userAlreadyExists';
 import { PrismaUserRepository } from 'src/user/prismaUser.repository';
 import { UserService } from 'src/user/user.service';
 
@@ -20,6 +21,7 @@ describe('UserService Integration Tests', () => {
     userService = module.get<UserService>(UserService);
 
     await prisma.cleanDatabase();
+    await prisma.resetAutoIncrement();
   });
 
   afterAll(async () => {
@@ -33,6 +35,20 @@ describe('UserService Integration Tests', () => {
       password: 'any_password',
       passwordConfirmation: 'any_password',
     };
+
+    it('should throw an error if user already exists', async () => {
+      await prisma.user.create({
+        data: {
+          name: 'another_name',
+          email: 'any_email@mail.com',
+          password: 'hashed_password',
+        },
+      });
+
+      const promise = userService.create(createUserInput);
+
+      await expect(promise).rejects.toThrow(new UserAlreadyExistsError());
+    });
 
     it('should create a user and return correct response data', async () => {
       const userResponse = await userService.create(createUserInput);
