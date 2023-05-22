@@ -39,7 +39,7 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('.create', () => {
+  describe('When creating a new user', () => {
     const createUserInput = {
       name: 'any_name',
       email: 'any_mail@mail.com',
@@ -55,7 +55,7 @@ describe('UserService', () => {
       expect(createSpy).toHaveBeenCalledWith(createUserInput);
     });
 
-    it('should call UserRepository .findUnique with correct values', async () => {
+    it('should check if user already exists', async () => {
       // resets mock info so .toHaveBeenCalled won't be 2, wich is wrong.
       userRepositoryMock.findUnique.mockClear();
       const userRepositorySpy = jest.spyOn(userRepositoryMock, 'findUnique');
@@ -66,7 +66,7 @@ describe('UserService', () => {
       expect(userRepositorySpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw UserAlreadyExsistsError if user already exists', async () => {
+    it('should throw an error if user already exists', async () => {
       // don't need to return user object, true it's enough.
       jest.spyOn(userRepositoryMock, 'findUnique').mockReturnValue(true);
 
@@ -75,7 +75,7 @@ describe('UserService', () => {
       await expect(promise).rejects.toThrow(new UserAlreadyExistsError());
     });
 
-    it('should call bcrypt with correct values', async () => {
+    it('should ensure user password is encrypted', async () => {
       const bcryptSpy = jest.spyOn(bcrypt, 'hash');
       jest.spyOn(userRepositoryMock, 'findUnique').mockResolvedValue(null);
 
@@ -84,7 +84,7 @@ describe('UserService', () => {
       expect(bcryptSpy).toHaveBeenCalledWith(createUserInput.password, 10);
     });
 
-    it('should call UserRepository .create with correct values', async () => {
+    it('should ensure correct user data is used when saving it', async () => {
       const userRepositorySpy = jest.spyOn(userRepositoryMock, 'create');
 
       userRepositoryMock.create.mockClear();
@@ -98,7 +98,7 @@ describe('UserService', () => {
       });
     });
 
-    it('should return correct response if user is created', async () => {
+    it('should return correct response after user is created', async () => {
       const response = await service.create(createUserInput);
 
       expect(response).toEqual({
