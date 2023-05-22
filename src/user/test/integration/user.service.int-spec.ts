@@ -22,6 +22,10 @@ describe('UserService Integration Tests', () => {
     await prisma.cleanDatabase();
   });
 
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
   describe('When creating a new user', () => {
     const createUserInput: CreateUserInputDto = {
       name: 'any_name',
