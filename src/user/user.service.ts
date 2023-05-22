@@ -27,6 +27,12 @@ export class UserService {
     };
     const createdUser = await this.repository.create(data);
 
-    return createdUser;
+    const responseData: CreateUserOutputDto = {
+      id: createdUser.id,
+      name: createdUser.name,
+      email: createdUser.email,
+    };
+
+    return responseData;
   }
 }
