@@ -46,4 +46,19 @@ describe('PrismaUserRepository Integration Tests', () => {
       id: 1,
     });
   });
+
+  it('should create a new user', async () => {
+    const userData = {
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password',
+    };
+
+    const user = await repository.create(userData);
+
+    expect(user).toEqual({
+      ...userData,
+      id: 1,
+    });
+  });
 });
