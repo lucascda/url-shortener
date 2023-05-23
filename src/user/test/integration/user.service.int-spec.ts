@@ -50,6 +50,14 @@ describe('UserService Integration Tests', () => {
       await expect(promise).rejects.toThrow(new UserAlreadyExistsError());
     });
 
+    it('should encrypt user password', async () => {
+      await userService.create(createUserInput);
+      const encryptedPassword = (await prisma.user.findFirst()).password;
+
+      expect(encryptedPassword).not.toBe(createUserInput.password);
+      expect(typeof encryptedPassword).toBe('string');
+    });
+
     it('should create a user and return correct response data', async () => {
       const userResponse = await userService.create(createUserInput);
 
