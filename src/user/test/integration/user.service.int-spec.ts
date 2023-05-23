@@ -6,6 +6,7 @@ import { CreateUserInputDto } from 'src/user/dto/create-user.dto';
 import { UserAlreadyExistsError } from 'src/user/errors/userAlreadyExists';
 import { PrismaUserRepository } from 'src/user/prismaUser.repository';
 import { UserService } from 'src/user/user.service';
+import { faker } from '@faker-js/faker';
 
 describe('UserService Integration Tests', () => {
   let prisma: PrismaService;
@@ -29,19 +30,20 @@ describe('UserService Integration Tests', () => {
   });
 
   describe('When creating a new user', () => {
+    const userPassword = faker.internet.password();
     const createUserInput: CreateUserInputDto = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password',
-      passwordConfirmation: 'any_password',
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: userPassword,
+      passwordConfirmation: userPassword,
     };
 
     it('should throw an error if user already exists', async () => {
       await prisma.user.create({
         data: {
-          name: 'another_name',
-          email: 'any_email@mail.com',
-          password: 'hashed_password',
+          name: faker.person.fullName(),
+          email: createUserInput.email,
+          password: faker.internet.password(),
         },
       });
 
@@ -63,8 +65,8 @@ describe('UserService Integration Tests', () => {
 
       expect(userResponse).toEqual({
         id: 1,
-        name: 'any_name',
-        email: 'any_email@mail.com',
+        name: createUserInput.name,
+        email: createUserInput.email,
       });
     });
   });
