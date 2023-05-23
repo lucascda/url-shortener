@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaUserRepository } from 'src/user/prismaUser.repository';
+import { faker } from '@faker-js/faker';
 
 describe('PrismaUserRepository Integration Tests', () => {
   let repository: PrismaUserRepository;
@@ -27,14 +28,14 @@ describe('PrismaUserRepository Integration Tests', () => {
 
   it('should find unique user by email', async () => {
     const userData = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
     };
     const anotherUserData = {
-      name: 'another_name',
-      email: 'another_email@mail.com',
-      password: 'another_hashed_password',
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
     };
     await prisma.user.create({ data: userData });
     await prisma.user.create({ data: anotherUserData });
@@ -49,9 +50,9 @@ describe('PrismaUserRepository Integration Tests', () => {
 
   it('should create a new user', async () => {
     const userData = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
     };
 
     const user = await repository.create(userData);
