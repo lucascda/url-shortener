@@ -1,5 +1,8 @@
+import { IsNotEmpty } from 'class-validator';
 export class CreateUserInputDto {
+  @IsNotEmpty()
   name: string;
+
   email: string;
   password: string;
   passwordConfirmation: string;
