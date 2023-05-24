@@ -8,6 +8,8 @@ export class CreateUserInputDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
   password: string;
   passwordConfirmation: string;
 }

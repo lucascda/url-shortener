@@ -147,5 +147,26 @@ describe('User Controller e2e Tests', () => {
         );
       });
     });
+
+    describe('password field', () => {
+      it('should return 422 error if password is empty', async () => {
+        const userPassword = faker.internet.password();
+        const userData = {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          passwordConfirmation: userPassword,
+        };
+
+        const response = await request(app.getHttpServer())
+          .post('/user')
+          .send(userData);
+
+        expect(response.status).toBe(422);
+        expect(response.body.message[0].field).toBe('password');
+        expect(response.body.message[0].error).toContain(
+          'password should not be empty',
+        );
+      });
+    });
   });
 });
