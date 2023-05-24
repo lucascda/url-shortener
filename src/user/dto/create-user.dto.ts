@@ -1,5 +1,6 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, MaxLength } from 'class-validator';
 export class CreateUserInputDto {
+  @MaxLength(70)
   @IsNotEmpty()
   name: string;
 

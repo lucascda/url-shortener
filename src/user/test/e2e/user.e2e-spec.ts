@@ -59,7 +59,29 @@ describe('User Controller e2e Tests', () => {
 
       expect(response.status).toBe(422);
       expect(response.body.message[0].field).toBe('name');
-      expect(response.body.message[0].error).toBe('name should not be empty');
+      expect(response.body.message[0].error).toContain(
+        'name should not be empty',
+      );
+    });
+
+    it('should return error if name is greater than 70 characters', async () => {
+      const userPassword = faker.internet.password();
+      const userData = {
+        name: faker.string.fromCharacters('abc', { min: 71, max: 80 }),
+        email: faker.internet.email(),
+        password: userPassword,
+        passwordConfirmation: userPassword,
+      } as CreateUserInputDto;
+
+      const response = await request(app.getHttpServer())
+        .post('/user')
+        .send(userData);
+
+      expect(response.status).toBe(422);
+      expect(response.body.message[0].field).toBe('name');
+      expect(response.body.message[0].error).toBe(
+        'name must be shorter than or equal to 70 characters',
+      );
     });
   });
 });
