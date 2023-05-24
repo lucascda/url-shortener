@@ -168,7 +168,7 @@ describe('User Controller e2e Tests', () => {
         );
       });
 
-      it('should return return 422 if password is not strong enough', async () => {
+      it('should return 422 error if password is not strong enough', async () => {
         const userPassword = 'weak_pass';
         const userData = {
           name: faker.person.fullName(),
@@ -185,6 +185,26 @@ describe('User Controller e2e Tests', () => {
         expect(response.body.message[0].field).toBe('password');
         expect(response.body.message[0].error).toContain(
           'password is not strong enough',
+        );
+      });
+
+      it('should return 422 error if password is greater than 64 characters', async () => {
+        const userPassword = faker.internet.password({ length: 65 });
+        const userData = {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          password: userPassword,
+          passwordConfirmation: userPassword,
+        };
+
+        const response = await request(app.getHttpServer())
+          .post('/user')
+          .send(userData);
+
+        expect(response.status).toBe(422);
+        expect(response.body.message[0].field).toBe('password');
+        expect(response.body.message[0].error).toContain(
+          'password must be shorter than or equal to 64 characters',
         );
       });
     });

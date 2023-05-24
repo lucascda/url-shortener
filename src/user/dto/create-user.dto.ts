@@ -22,6 +22,7 @@ export class CreateUserInputDto {
     minSymbols: 1,
     minUppercase: 1,
   })
+  @MaxLength(64)
   password: string;
   passwordConfirmation: string;
 }
