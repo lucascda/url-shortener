@@ -5,6 +5,7 @@ import {
   IsEmail,
   IsStrongPassword,
 } from 'class-validator';
+import { IsEqualTo } from '../../utils/isEqualTo.decorator';
 export class CreateUserInputDto {
   @MaxLength(70)
   @IsNotEmpty()
@@ -24,6 +25,8 @@ export class CreateUserInputDto {
   })
   @MaxLength(64)
   password: string;
+
+  @IsEqualTo('password')
   passwordConfirmation: string;
 }
 

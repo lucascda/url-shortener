@@ -208,5 +208,27 @@ describe('User Controller e2e Tests', () => {
         );
       });
     });
+
+    describe('passwordConfirmation field', () => {
+      it('should return 422 error if passwordConfirmation doesnt match with password', async () => {
+        const userPassword = '@Strong_pass1';
+        const userData = {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          password: userPassword,
+          passwordConfirmation: faker.internet.password(),
+        };
+
+        const response = await request(app.getHttpServer())
+          .post('/user')
+          .send(userData);
+
+        expect(response.status).toBe(422);
+        expect(response.body.message[0].field).toBe('passwordConfirmation');
+        expect(response.body.message[0].error).toContain(
+          'passwordConfirmation must match password',
+        );
+      });
+    });
   });
 });
