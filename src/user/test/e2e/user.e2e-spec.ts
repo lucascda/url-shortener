@@ -167,6 +167,26 @@ describe('User Controller e2e Tests', () => {
           'password should not be empty',
         );
       });
+
+      it('should return return 422 if password is not strong enough', async () => {
+        const userPassword = 'weak_pass';
+        const userData = {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          password: userPassword,
+          passwordConfirmation: userPassword,
+        };
+
+        const response = await request(app.getHttpServer())
+          .post('/user')
+          .send(userData);
+
+        expect(response.status).toBe(422);
+        expect(response.body.message[0].field).toBe('password');
+        expect(response.body.message[0].error).toContain(
+          'password is not strong enough',
+        );
+      });
     });
   });
 });
