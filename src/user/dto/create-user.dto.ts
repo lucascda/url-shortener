@@ -1,10 +1,11 @@
-import { IsNotEmpty, MaxLength, IsString } from 'class-validator';
+import { IsNotEmpty, MaxLength, IsString, IsEmail } from 'class-validator';
 export class CreateUserInputDto {
   @MaxLength(70)
   @IsNotEmpty()
   @IsString()
   name: string;
 
+  @IsEmail()
   email: string;
   password: string;
   passwordConfirmation: string;
