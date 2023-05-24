@@ -5,6 +5,7 @@ export class CreateUserInputDto {
   @IsString()
   name: string;
 
+  @IsNotEmpty()
   @IsEmail()
   email: string;
   password: string;

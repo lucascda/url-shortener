@@ -127,6 +127,25 @@ describe('User Controller e2e Tests', () => {
           'email must be an email',
         );
       });
+
+      it('should return 422 error if email is empty', async () => {
+        const userPassword = faker.internet.password();
+        const userData = {
+          name: faker.person.fullName(),
+          password: userPassword,
+          passwordConfirmation: userPassword,
+        };
+
+        const response = await request(app.getHttpServer())
+          .post('/user')
+          .send(userData);
+
+        expect(response.status).toBe(422);
+        expect(response.body.message[0].field).toBe('email');
+        expect(response.body.message[0].error).toContain(
+          'email should not be empty',
+        );
+      });
     });
   });
 });
