@@ -11,9 +11,15 @@ import { faker } from '@faker-js/faker';
 import { CreateUserInputDto } from 'src/user/dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+const userRoute = '/users';
+
 describe('User Controller e2e Tests', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+
+  const makePostRequest = async (userData): Promise<request.Response> => {
+    return await request(app.getHttpServer()).post(userRoute).send(userData);
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -54,9 +60,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         } as CreateUserInputDto;
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('name');
@@ -74,9 +78,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         } as CreateUserInputDto;
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('name');
@@ -95,9 +97,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         };
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('name');
@@ -117,9 +117,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         };
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('email');
@@ -136,9 +134,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         };
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('email');
@@ -157,9 +153,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         };
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('password');
@@ -177,9 +171,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         };
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('password');
@@ -197,9 +189,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: userPassword,
         };
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('password');
@@ -219,9 +209,7 @@ describe('User Controller e2e Tests', () => {
           passwordConfirmation: faker.internet.password(),
         };
 
-        const response = await request(app.getHttpServer())
-          .post('/users')
-          .send(userData);
+        const response = await makePostRequest(userData);
 
         expect(response.status).toBe(422);
         expect(response.body.message[0].field).toBe('passwordConfirmation');
