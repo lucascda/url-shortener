@@ -8,8 +8,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from 'src/app.module';
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { CreateUserInputDto } from 'src/user/dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { createUserInput } from 'src/test/stubs/user-stub';
 
 const userRoute = '/users';
 
@@ -53,12 +53,7 @@ describe('User Controller e2e Tests', () => {
   describe('User Validation', () => {
     describe('name field', () => {
       it('should return 422 error if name is empty', async () => {
-        const userPassword = faker.internet.password();
-        const userData = {
-          email: faker.internet.email(),
-          password: userPassword,
-          passwordConfirmation: userPassword,
-        } as CreateUserInputDto;
+        const userData = { ...createUserInput, name: undefined };
 
         const response = await makePostRequest(userData);
 
@@ -70,13 +65,10 @@ describe('User Controller e2e Tests', () => {
       });
 
       it('should return 422 error if name is greater than 70 characters', async () => {
-        const userPassword = faker.internet.password();
         const userData = {
+          ...createUserInput,
           name: faker.string.fromCharacters('abc', { min: 71, max: 80 }),
-          email: faker.internet.email(),
-          password: userPassword,
-          passwordConfirmation: userPassword,
-        } as CreateUserInputDto;
+        };
 
         const response = await makePostRequest(userData);
 
@@ -88,13 +80,10 @@ describe('User Controller e2e Tests', () => {
       });
 
       it('should return 422 error if name is not a string', async () => {
-        const userPassword = faker.internet.password();
         const userData = {
+          ...createUserInput,
           // name field is now a number
           name: faker.number.int(),
-          email: faker.internet.email(),
-          password: userPassword,
-          passwordConfirmation: userPassword,
         };
 
         const response = await makePostRequest(userData);
@@ -109,12 +98,9 @@ describe('User Controller e2e Tests', () => {
 
     describe('email field', () => {
       it('should return 422 error if email has invalid format', async () => {
-        const userPassword = faker.internet.password();
         const userData = {
-          name: faker.person.fullName(),
+          ...createUserInput,
           email: 'invalid_email',
-          password: userPassword,
-          passwordConfirmation: userPassword,
         };
 
         const response = await makePostRequest(userData);
@@ -127,11 +113,9 @@ describe('User Controller e2e Tests', () => {
       });
 
       it('should return 422 error if email is empty', async () => {
-        const userPassword = faker.internet.password();
         const userData = {
-          name: faker.person.fullName(),
-          password: userPassword,
-          passwordConfirmation: userPassword,
+          ...createUserInput,
+          email: undefined,
         };
 
         const response = await makePostRequest(userData);
@@ -146,12 +130,7 @@ describe('User Controller e2e Tests', () => {
 
     describe('password field', () => {
       it('should return 422 error if password is empty', async () => {
-        const userPassword = faker.internet.password();
-        const userData = {
-          name: faker.person.fullName(),
-          email: faker.internet.email(),
-          passwordConfirmation: userPassword,
-        };
+        const userData = { ...createUserInput, password: undefined };
 
         const response = await makePostRequest(userData);
 
@@ -165,8 +144,7 @@ describe('User Controller e2e Tests', () => {
       it('should return 422 error if password is not strong enough', async () => {
         const userPassword = 'weak_pass';
         const userData = {
-          name: faker.person.fullName(),
-          email: faker.internet.email(),
+          ...createUserInput,
           password: userPassword,
           passwordConfirmation: userPassword,
         };
@@ -183,8 +161,7 @@ describe('User Controller e2e Tests', () => {
       it('should return 422 error if password is greater than 64 characters', async () => {
         const userPassword = faker.internet.password({ length: 65 });
         const userData = {
-          name: faker.person.fullName(),
-          email: faker.internet.email(),
+          ...createUserInput,
           password: userPassword,
           passwordConfirmation: userPassword,
         };
@@ -203,8 +180,7 @@ describe('User Controller e2e Tests', () => {
       it('should return 422 error if passwordConfirmation doesnt match with password', async () => {
         const userPassword = '@Strong_pass1';
         const userData = {
-          name: faker.person.fullName(),
-          email: faker.internet.email(),
+          ...createUserInput,
           password: userPassword,
           passwordConfirmation: faker.internet.password(),
         };
