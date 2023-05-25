@@ -55,7 +55,7 @@ describe('User Controller e2e Tests', () => {
         } as CreateUserInputDto;
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -75,7 +75,7 @@ describe('User Controller e2e Tests', () => {
         } as CreateUserInputDto;
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -96,7 +96,7 @@ describe('User Controller e2e Tests', () => {
         };
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -118,7 +118,7 @@ describe('User Controller e2e Tests', () => {
         };
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -137,7 +137,7 @@ describe('User Controller e2e Tests', () => {
         };
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -158,7 +158,7 @@ describe('User Controller e2e Tests', () => {
         };
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -178,7 +178,7 @@ describe('User Controller e2e Tests', () => {
         };
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -198,7 +198,7 @@ describe('User Controller e2e Tests', () => {
         };
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);
@@ -220,7 +220,7 @@ describe('User Controller e2e Tests', () => {
         };
 
         const response = await request(app.getHttpServer())
-          .post('/user')
+          .post('/users')
           .send(userData);
 
         expect(response.status).toBe(422);

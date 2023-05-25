@@ -3,7 +3,7 @@ import { CreateUserInputDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UserAlreadyExistsError } from './errors/userAlreadyExists';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
