@@ -2,11 +2,11 @@ import { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserInputDto } from 'src/user/dto/create-user.dto';
 import { UserAlreadyExistsError } from 'src/user/errors/userAlreadyExists';
 import { PrismaUserRepository } from 'src/user/prismaUser.repository';
 import { UserService } from 'src/user/user.service';
 import { faker } from '@faker-js/faker';
+import { createUserInput } from 'src/test/stubs/user-stub';
 
 describe('UserService Integration Tests', () => {
   let prisma: PrismaService;
@@ -30,14 +30,6 @@ describe('UserService Integration Tests', () => {
   });
 
   describe('When creating a new user', () => {
-    const userPassword = faker.internet.password();
-    const createUserInput: CreateUserInputDto = {
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: userPassword,
-      passwordConfirmation: userPassword,
-    };
-
     it('should throw an error if user already exists', async () => {
       await prisma.user.create({
         data: {

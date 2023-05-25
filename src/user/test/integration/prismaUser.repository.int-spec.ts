@@ -4,6 +4,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaUserRepository } from 'src/user/prismaUser.repository';
 import { faker } from '@faker-js/faker';
+import { createUserInput } from 'src/test/stubs/user-stub';
 
 describe('PrismaUserRepository Integration Tests', () => {
   let repository: PrismaUserRepository;
@@ -33,9 +34,8 @@ describe('PrismaUserRepository Integration Tests', () => {
       password: faker.internet.password(),
     };
     const anotherUserData = {
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+      ...createUserInput,
+      passwordConfirmation: undefined,
     };
     await prisma.user.create({ data: userData });
     await prisma.user.create({ data: anotherUserData });
@@ -54,7 +54,6 @@ describe('PrismaUserRepository Integration Tests', () => {
       email: faker.internet.email(),
       password: faker.internet.password(),
     };
-
     const user = await repository.create(userData);
 
     expect(user).toEqual({
