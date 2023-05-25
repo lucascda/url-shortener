@@ -11,9 +11,17 @@ describe('UserController Integration Tests', () => {
   let prisma: PrismaService;
   let userController: UserController;
 
+  const userPassword = faker.internet.password();
+  const userInput = {
+    name: faker.person.fullName(),
+    email: faker.internet.email(),
+    password: userPassword,
+    passwordConfirmation: userPassword,
+  };
+
   const repositoryMock = {
     findUnique: jest.fn(),
-    create: jest.fn(),
+    create: jest.fn(() => ({ ...userInput, id: 1 })),
   };
 
   beforeEach(async () => {
@@ -38,13 +46,6 @@ describe('UserController Integration Tests', () => {
   });
 
   it('Should throw if UserService throws UserAlreadyExistsExcetion', async () => {
-    const userPassword = faker.internet.password();
-    const userInput = {
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: userPassword,
-      passwordConfirmation: userPassword,
-    };
     // If repository returns it means service it will throw as well
     jest.spyOn(repositoryMock, 'findUnique').mockResolvedValue(true);
 
@@ -53,5 +54,17 @@ describe('UserController Integration Tests', () => {
     await expect(promise).rejects.toThrow(
       new ConflictException('User already exists'),
     );
+  });
+
+  it('Should create a new user', async () => {
+    // User does not exist already
+    jest.spyOn(repositoryMock, 'findUnique').mockResolvedValue(false);
+    const response = await userController.create(userInput);
+
+    expect(response).toEqual({
+      id: 1,
+      name: userInput.name,
+      email: userInput.email,
+    });
   });
 });
