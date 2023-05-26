@@ -81,7 +81,7 @@ describe('AuthService', () => {
         id: 1,
         password: 'hashed_password',
       }));
-      jest.spyOn(userServiceMock, 'find').mockImplementation(() => false);
+      jest.spyOn(bcrypt, 'compare').mockImplementation(() => false);
 
       const promise = service.auth(signInUserInput);
 
