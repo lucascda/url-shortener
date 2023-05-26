@@ -49,6 +49,27 @@ describe('AuthService', () => {
       await expect(promise).rejects.toThrow(new UnauthorizedError());
     });
 
+    it('should compare passwords', async () => {
+      const signInUserInput = {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      };
+      jest.spyOn(userServiceMock, 'find').mockImplementation(() => ({
+        ...signInUserInput,
+        id: 1,
+        password: 'hashed_password',
+      }));
+      const bcryptSpy = jest.spyOn(bcrypt, 'compare');
+
+      await service.auth(signInUserInput);
+
+      expect(bcryptSpy).toHaveBeenCalledWith(
+        signInUserInput.password,
+        'hashed_password',
+      );
+    });
+
     it('should throw if user password is wrong', async () => {
       const signInUserInput = {
         name: faker.person.fullName(),
