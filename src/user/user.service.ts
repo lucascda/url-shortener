@@ -3,6 +3,7 @@ import { CreateUserInputDto, CreateUserOutputDto } from './dto/create-user.dto';
 import { PrismaUserRepository } from './prismaUser.repository';
 import { UserAlreadyExistsError } from './errors/userAlreadyExists';
 import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -37,5 +38,14 @@ export class UserService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-  async find(email: string) {}
+  async find(email: string): Promise<User> {
+    return new Promise((resolve) =>
+      resolve({
+        id: 1,
+        name: 'fake_name',
+        email: 'fake_email',
+        password: 'fake_pass',
+      }),
+    );
+  }
 }

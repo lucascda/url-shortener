@@ -3,6 +3,16 @@ import { AuthService } from './auth.service';
 import { faker } from '@faker-js/faker';
 import { UnauthorizedError } from './errors/unauthorizedError';
 import { UserService } from 'src/user/user.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as bcrypt from 'bcrypt';
+
+jest.mock('bcrypt', () => ({
+  async compare(): Promise<boolean> {
+    return await new Promise((resolve) => {
+      resolve(true);
+    });
+  },
+}));
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -33,6 +43,25 @@ describe('AuthService', () => {
         password: faker.internet.password(),
       };
       jest.spyOn(userServiceMock, 'find').mockImplementation(() => false);
+
+      const promise = service.auth(signInUserInput);
+
+      await expect(promise).rejects.toThrow(new UnauthorizedError());
+    });
+
+    it('should throw if user password is wrong', async () => {
+      const signInUserInput = {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      };
+      jest.spyOn(userServiceMock, 'find').mockImplementation(() => ({
+        ...signInUserInput,
+        id: 1,
+        password: 'hashed_password',
+      }));
+      jest.spyOn(userServiceMock, 'find').mockImplementation(() => false);
+
       const promise = service.auth(signInUserInput);
 
       await expect(promise).rejects.toThrow(new UnauthorizedError());
