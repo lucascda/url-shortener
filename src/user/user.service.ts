@@ -35,4 +35,7 @@ export class UserService {
 
     return responseData;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+  async find(email: string) {}
 }
