@@ -9,6 +9,8 @@ describe('UrlService Integration Tests', () => {
   let service: UrlService;
   let prisma: PrismaService;
 
+  const baseUrl = process.env.BASE_URL;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [UrlService, PrismaUrlRepository],
@@ -26,13 +28,12 @@ describe('UrlService Integration Tests', () => {
     await prisma.$disconnect();
   });
 
-  describe('when creating a new url', () => {
-    it('should create a new shorten url succesfully', async () => {
-      const createUrlInput = {
-        original_url: faker.internet.url(),
-      };
-      const baseUrl = process.env.BASE_URL;
+  describe('#create', () => {
+    const createUrlInput = {
+      original_url: faker.internet.url(),
+    };
 
+    it('creates new url and return correct response', async () => {
       const createdUrl = await service.create(createUrlInput);
 
       expect(createdUrl).toEqual({
