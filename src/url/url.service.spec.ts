@@ -31,8 +31,8 @@ describe('UrlService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('when creating a new url', () => {
-    it('it should create a new random id', async () => {
+  describe('#create', () => {
+    it('should call nanoid', async () => {
       const createUrlInput = {
         original_url: faker.internet.url(),
       };
@@ -44,7 +44,7 @@ describe('UrlService', () => {
       expect(nanoidSpy).toReturnWith('random_id');
     });
 
-    it('should create a new shorten url', async () => {
+    it('should return correct response', async () => {
       const createUrlInput = {
         original_url: faker.internet.url(),
       };
