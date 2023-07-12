@@ -1,4 +1,7 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class CreateUrlInputDto {
+  @IsNotEmpty()
   original_url: string;
 }
 
