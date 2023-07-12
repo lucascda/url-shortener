@@ -26,18 +26,21 @@ describe('PrismaUrlRepository Integration Tests', () => {
     await prisma.$disconnect();
   });
 
-  it('should create new shorten url', async () => {
-    const createUrlInput: CreateUrlData = {
-      original_url: faker.internet.url(),
-      short_url: `${process.env.BASE_URL}/random_id`,
-    };
+  describe('#create', () => {
+    it('creates new shorten url and save it to database', async () => {
+      const createUrlInput: CreateUrlData = {
+        original_url: faker.internet.url(),
+        short_url: `${process.env.BASE_URL}/random_id`,
+      };
 
-    const createdUrl = await repository.create(createUrlInput);
+      await repository.create(createUrlInput);
+      const createdUrl = await prisma.url.findUnique({ where: { id: 1 } });
 
-    expect(createdUrl).toEqual({
-      id: 1,
-      original_url: createUrlInput.original_url,
-      short_url: createUrlInput.short_url,
+      expect(createdUrl).toEqual({
+        id: 1,
+        original_url: createUrlInput.original_url,
+        short_url: createUrlInput.short_url,
+      });
     });
   });
 });
