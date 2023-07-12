@@ -32,10 +32,17 @@ describe('UrlService', () => {
   });
 
   describe('#create', () => {
-    it('should call nanoid', async () => {
-      const createUrlInput = {
-        original_url: faker.internet.url(),
-      };
+    const createUrlInput = {
+      original_url: faker.internet.url(),
+    };
+
+    jest.spyOn(urlRepositoryMock, 'create').mockReturnValue({
+      id: 1,
+      original_url: createUrlInput.original_url,
+      short_url: `${base_url}/random_id`,
+    });
+
+    it('calls nanoid', async () => {
       const nanoidSpy = jest.spyOn(nanoid, 'nanoid');
 
       await service.create(createUrlInput);
@@ -44,16 +51,7 @@ describe('UrlService', () => {
       expect(nanoidSpy).toReturnWith('random_id');
     });
 
-    it('should return correct response', async () => {
-      const createUrlInput = {
-        original_url: faker.internet.url(),
-      };
-      jest.spyOn(urlRepositoryMock, 'create').mockReturnValue({
-        id: 1,
-        original_url: createUrlInput.original_url,
-        short_url: `${base_url}/random_id`,
-      });
-
+    it('returns correct response', async () => {
       const createdUrl = await service.create(createUrlInput);
 
       expect(createdUrl).toEqual({
