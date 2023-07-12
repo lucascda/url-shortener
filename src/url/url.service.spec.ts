@@ -25,6 +25,8 @@ describe('UrlService', () => {
     }).compile();
 
     service = module.get<UrlService>(UrlService);
+
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -49,6 +51,18 @@ describe('UrlService', () => {
 
       expect(nanoidSpy).toHaveBeenCalled();
       expect(nanoidSpy).toReturnWith('random_id');
+    });
+
+    it('calls UrlRepository with correct params', async () => {
+      const repositorySpy = jest.spyOn(urlRepositoryMock, 'create');
+
+      await service.create(createUrlInput);
+
+      expect(repositorySpy).toHaveBeenCalledTimes(1);
+      expect(repositorySpy).toHaveBeenCalledWith({
+        original_url: createUrlInput.original_url,
+        short_url: `${base_url}/random_id`,
+      });
     });
 
     it('returns correct response', async () => {
