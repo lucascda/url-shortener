@@ -15,7 +15,6 @@ export class UrlService {
       original_url,
       short_url,
     };
-
     return await this.repository.create(data);
   }
 }
