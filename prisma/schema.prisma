@@ -20,5 +20,5 @@ model User {
 model Url {
   id Int @id @default(autoincrement())
   original_url String 
-  short_url String @unique  
+  hash String @unique  
 }

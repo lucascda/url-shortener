@@ -8,9 +8,9 @@ export class CreateUrlInputDto {
 export class CreateUrlOutputDto {
   id: number;
   original_url: string;
-  short_url: string;
+  hash: string;
 }
 export class CreateUrlData {
   original_url: string;
-  short_url: string;
+  hash: string;
 }

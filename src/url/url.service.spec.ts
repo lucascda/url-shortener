@@ -61,7 +61,7 @@ describe('UrlService', () => {
       expect(repositorySpy).toHaveBeenCalledTimes(1);
       expect(repositorySpy).toHaveBeenCalledWith({
         original_url: createUrlInput.original_url,
-        short_url: `${base_url}/random_id`,
+        hash: 'random_id',
       });
     });
 

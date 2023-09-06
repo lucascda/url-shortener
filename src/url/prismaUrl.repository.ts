@@ -9,4 +9,8 @@ export class PrismaUrlRepository {
   async create(data: CreateUrlData) {
     return this.prisma.url.create({ data });
   }
+
+  async getByHash(hash: string) {
+    return this.prisma.url.findFirst({ where: { hash } });
+  }
 }

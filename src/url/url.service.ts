@@ -9,12 +9,18 @@ export class UrlService {
 
   async create(createUrlDto: CreateUrlInputDto): Promise<CreateUrlOutputDto> {
     const { original_url } = createUrlDto;
-    const random_id = nanoid();
-    const short_url = `${process.env.BASE_URL}/${random_id}`;
+    const hash = nanoid();
+
     const data = {
       original_url,
-      short_url,
+      hash,
     };
     return await this.repository.create(data);
+  }
+
+  async getByHash(hash: string) {
+    const url = await this.repository.getByHash(hash);
+
+    return { original_url: url.original_url };
   }
 }
