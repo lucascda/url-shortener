@@ -1,6 +1,14 @@
-import { Body, Controller, Post, Get, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+  NotFoundException,
+} from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlInputDto, CreateUrlOutputDto } from './dto/create-url.dto';
+import { UrlNotFoundError } from './url.errors';
 
 @Controller('urls')
 export class UrlController {
@@ -15,6 +23,10 @@ export class UrlController {
 
   @Get(':hash')
   async getByHash(@Param('hash') hash: string) {
-    return await this.urlService.getByHash(hash);
+    try {
+      return await this.urlService.getByHash(hash);
+    } catch (e) {
+      if (e instanceof UrlNotFoundError) throw new NotFoundException();
+    }
   }
 }

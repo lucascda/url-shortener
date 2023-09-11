@@ -1,6 +1,7 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUrlData } from './dto/create-url.dto';
 import { Injectable } from '@nestjs/common';
+import { UrlNotFoundError } from './url.errors';
 
 @Injectable()
 export class PrismaUrlRepository {
@@ -11,6 +12,8 @@ export class PrismaUrlRepository {
   }
 
   async getByHash(hash: string) {
-    return this.prisma.url.findFirst({ where: { hash } });
+    const url = await this.prisma.url.findFirst({ where: { hash } });
+    if (!url) throw new UrlNotFoundError();
+    return url;
   }
 }
