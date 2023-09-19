@@ -29,4 +29,13 @@ export class UrlController {
       if (e instanceof UrlNotFoundError) throw new NotFoundException();
     }
   }
+
+  @Get(':hash/visit')
+  async visitByHash(@Param('hash') hash: string) {
+    try {
+      return await this.urlService.incrementClick(hash);
+    } catch (e) {
+      if (e instanceof UrlNotFoundError) throw new NotFoundException();
+    }
+  }
 }

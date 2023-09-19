@@ -21,6 +21,12 @@ export class UrlService {
   async getByHash(hash: string) {
     const url = await this.repository.getByHash(hash);
 
+    return { original_url: url.original_url, clicks: url.clicks };
+  }
+
+  async incrementClick(hash: string) {
+    const url = await this.repository.incrementClick(hash);
+
     return { original_url: url.original_url };
   }
 }

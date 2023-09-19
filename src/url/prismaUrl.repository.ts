@@ -16,4 +16,15 @@ export class PrismaUrlRepository {
     if (!url) throw new UrlNotFoundError();
     return url;
   }
+
+  async incrementClick(hash: string) {
+    let url = await this.prisma.url.findFirst({ where: { hash } });
+    if (!url) throw new UrlNotFoundError();
+    url = await this.prisma.url.update({
+      where: { hash },
+      data: { clicks: url.clicks + 1 },
+    });
+
+    return url;
+  }
 }
