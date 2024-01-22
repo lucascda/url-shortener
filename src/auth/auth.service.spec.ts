@@ -40,7 +40,7 @@ describe('AuthService', () => {
     it('should throw if user does not exists', async () => {
       jest.spyOn(userServiceMock, 'find').mockImplementation(() => false);
 
-      const promise = service.auth(signInUserInput);
+      const promise = service.signIn(signInUserInput);
 
       await expect(promise).rejects.toThrow(new UnauthorizedError());
     });
@@ -53,7 +53,7 @@ describe('AuthService', () => {
       }));
       const bcryptSpy = jest.spyOn(bcrypt, 'compare');
 
-      await service.auth(signInUserInput);
+      await service.signIn(signInUserInput);
 
       expect(bcryptSpy).toHaveBeenCalledWith(
         signInUserInput.password,
@@ -69,7 +69,7 @@ describe('AuthService', () => {
       }));
       jest.spyOn(bcrypt, 'compare').mockImplementation(() => false);
 
-      const promise = service.auth(signInUserInput);
+      const promise = service.signIn(signInUserInput);
 
       await expect(promise).rejects.toThrow(new UnauthorizedError());
     });

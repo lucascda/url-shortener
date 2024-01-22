@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async auth(signInUserDto: SignInUserInputDto) {
+  async signIn(signInUserDto: SignInUserInputDto) {
     const userAlreadyExists = await this.userService.find(signInUserDto.email);
     if (!userAlreadyExists) {
       throw new UnauthorizedError();
@@ -21,5 +21,10 @@ export class AuthService {
     if (!matchPassword) {
       throw new UnauthorizedError();
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = userAlreadyExists;
+
+    return result;
   }
 }
