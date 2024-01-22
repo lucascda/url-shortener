@@ -5,6 +5,8 @@ import { UserService } from 'src/user/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as bcrypt from 'bcrypt';
 import { signInUserInput } from 'src/test/stubs/user-stub';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constants';
 
 jest.mock('bcrypt', () => ({
   async compare(): Promise<boolean> {
@@ -26,6 +28,13 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: UserService, useValue: userServiceMock },
+      ],
+      imports: [
+        JwtModule.register({
+          global: true,
+          secret: jwtConstants.secret,
+          signOptions: { expiresIn: '3600s' },
+        }),
       ],
     }).compile();
 
