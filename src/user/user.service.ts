@@ -39,13 +39,6 @@ export class UserService {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
   async find(email: string): Promise<User> {
-    return new Promise((resolve) =>
-      resolve({
-        id: 1,
-        name: 'fake_name',
-        email: 'fake_email',
-        password: 'fake_pass',
-      }),
-    );
+    return this.repository.findUnique(email);
   }
 }
